@@ -46,14 +46,14 @@ enableCtrlServer: true
 
 images:
   # images.registry is the global container registry for the images, you could replace it with your self-hosted container registry.
-  registry: "ghcr.io"
+  registry: "quay.io"
   # images.tag is the global image tag (for example, semiVer with prefix v, or latest).
   tag: "latest"
 
 ## Optional array of imagePullSecrets containing private registry credentials
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-imagePullSecrets: []
-# - name: secretName
+imagePullSecrets:
+  - name: quay-cred
 
 controllerManager:
   # securityContext if needed
@@ -75,11 +75,11 @@ controllerManager:
   # image would be constructed by <registry>/<repository>:<tag>
   image:
     # override global registry, empty value means using the global images.registry
-    registry: ""
+    registry: "quay.io"
     # repository part for image of chaos-controller-manager
-    repository: chaos-mesh/chaos-mesh
+    repository: ccsportal/devcontainers
     # override global tag, empty value means using the global images.tag
-    tag: ""
+    tag: "chaos-mesh-latest"
   # Image pull policy
   imagePullPolicy: IfNotPresent
 
@@ -155,11 +155,11 @@ chaosDaemon:
   # image would be constructed by <registry>/<repository>:<tag>
   image:
     # override global registry, empty value means using the global images.registry
-    registry: ""
+    registry: "quay.io"
     # repository part for image of chaos-daemon
-    repository: chaos-mesh/chaos-daemon
+    repository: ccsportal/devcontainers
     # empty tag means using the global images.tag
-    tag: ""
+    tag: "chaos-daemon-latest"
   # Image pull policy
   imagePullPolicy: IfNotPresent
   # The port which grpc server listens on.
@@ -206,9 +206,9 @@ chaosDaemon:
   podSecurityPolicy: false
   # runtime specifies which container runtime to use. Currently
   # we only supports docker, containerd and CRI-O.
-  runtime: docker
+  runtime: containerd
   # socketPath specifies the path of container runtime socket on the host.
-  socketPath: /var/run/docker.sock
+  socketPath: /run/containerd/containerd.sock
 
   # If you are using Kind or using containerd as CRI, you can use the
   # config below to use containerd as the runtime in chaos-daemon.
@@ -237,7 +237,8 @@ chaosDaemon:
     #   cpu: 250m
     #   memory: 512Mi
   # Node labels for chaos-daemon pod assignment
-  nodeSelector: {}
+  nodeSelector: 
+    node.kubernetes.io/role: "ccsportal"
   # Toleration labels for chaos-daemon pod assignment
   tolerations: []
   # Map of chaos-controller-manager node/pod affinities
@@ -259,7 +260,7 @@ chaosDaemon:
 
 dashboard:
   # Enable chaos-dashboard
-  create: true
+  create: false
   # Optional, the secret name that has `DATABASE_DATASOURCE` defined.
   # It's recommended to use a secret to store the database credentials.
   databaseSecretName: ""
@@ -277,11 +278,11 @@ dashboard:
   serviceAccount: chaos-dashboard
   image:
     # override global registry, empty value means using the global images.registry
-    registry: ""
+    registry: "quay.io"
     # repository part for image of chaos-dashboard
-    repository: chaos-mesh/chaos-dashboard
+    repository: ccsportal/devcontainers
     # override global tag, empty value means using the global images.tag
-    tag: ""
+    tag: "chaos-dashboard-latest"
   # Image pull policy
   imagePullPolicy: IfNotPresent
   # securityMode requires user to provide credentials on Chaos Dashboard, instead of using chaos-dashboard service account
@@ -436,11 +437,11 @@ dnsServer:
   # image would be constructed by <registry>/<repository>:<tag>
   image:
     # override global registry, empty value means using the global images.registry
-    registry: ""
+    registry: "quay.io"
     # repository part for image of chaos-dns-server
-    repository: chaos-mesh/chaos-coredns
+    repository: ccsportal/devcontainers
     # override global tag, empty value means using the global images.tag
-    tag: "v0.2.6"
+    tag: "chaos-coredns-v0.2.6"
   # Image pull policy
   imagePullPolicy: IfNotPresent
   # Customized priorityClassName for chaos-dns-server
