@@ -197,7 +197,8 @@ chaosDaemon:
   # Custom priorityClassName for using pod priorities
   priorityClassName: ""
   # Pod annotations of chaos-daemon
-  podAnnotations: {}
+  podAnnotations: 
+    prometheus.io/scrape: "false"
   # ServiceAccount name for chaos-daemon
   serviceAccount: chaos-daemon
   # ServiceAccount annotations for chaos-daemon
@@ -256,7 +257,7 @@ chaosDaemon:
   service:
     scrape:
       # Enable metric scraping from Promethues by annotations
-      enabled: true
+      enabled: false
 
 dashboard:
   # Enable chaos-dashboard
